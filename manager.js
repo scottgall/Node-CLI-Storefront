@@ -16,44 +16,52 @@ connection.connect(function(err) {
   menu();
 });
 
+// menu prompt at start.
 function menu() {
+  console.log(`\nHELLO MANAGER.`);
   inquirer
-      .prompt([
-        {
-        type:'list',
-        message: 'Choose an option:',
-        choices: ['View products for sale.', 'View low inventory.', 'Add to inventory.', 'Add new product.', '\n'],
-        name: 'choice'
-        }
-      ]).then(choice => {
-        switch (choice.choice) {
-          case 'View products for sale.':
-            viewProducts('SELECT * FROM products');
-            break;
-          case 'View low inventory.':
-            viewProducts('SELECT * FROM products WHERE stock_quantity < 5')
-            break;
-          case 'Add to inventory.':
-            inventoryInquire();
-            break;
-          case 'Add new product.':
-            addProduct();
-            break;
-          case '\n':
-            menu();
-            break;
-        }
-      })
+    .prompt([
+      {
+      type:'list',
+      message: 'Choose an option:',
+      choices: ['View products for sale.', 'View low inventory.', 'Add to inventory.', 'Add new product.', '\n'],
+      name: 'choice'
+      }
+    ]).then(choice => {
+      switch (choice.choice) {
+        case 'View products for sale.':
+          viewProducts('SELECT * FROM products');
+          break;
+        case 'View low inventory.':
+          viewProducts('SELECT * FROM products WHERE stock_quantity < 5')
+          break;
+        case 'Add to inventory.':
+          inventoryInquire();
+          break;
+        case 'Add new product.':
+          addProduct();
+          break;
+        case '\n':
+          menu();
+          break;
+      }
+    })
 }
 
-function viewProducts(x) {
-  connection.query(x, function(err, res) {
+// displays all values from products table.
+function viewProducts(query) {
+  connection.query(query, function(err, res) {
     if (err) throw err;
+    if (res.length === 0) {
+      console.log(`\nno low stock\n`);
+      return continueQuestion();
+    }
     console.log(`\n${columnify(res)}\n`);
     continueQuestion();
-  })
+  });
 }
 
+// displays products and asks for ID of product user wishes to increase inventory on.
 function inventoryInquire() {
   let query = 'SELECT * FROM products';
   connection.query(query, function(err, res) {
@@ -62,23 +70,24 @@ function inventoryInquire() {
   })
   inquirer
     .prompt({
-      name: 'id',
+      name: 'productID',
       type: 'input',
       message: 'Enter the ID of the product you want to add inventory to.\n'
     }).then(choice => {
-        let id = numberCheck(choice.id);
-        if (!id) {
+        let productID = numberCheck(choice.productID);
+        if (!productID) {
           console.log(`\nNot a valid item ID.\n`);
           return inventoryInquire();
         }
-        itemCheck(id);
+        itemCheck(productID);
     }); 
 }
 
-function itemCheck(x) {
+// checks if product id exists in products table.
+function itemCheck(productID) {
   let query = 'SELECT product_name, stock_quantity FROM products where item_id = ?';
-  connection.query(query, x, function(err, res) {
-    if (res.length === 0) {
+  connection.query(query, productID, function(err, res) {
+    if ((res.length === 0) || (err)) {
       console.log(`\nNo products found with that ID.\n`);
       return inventoryInquire();
     }
@@ -86,32 +95,35 @@ function itemCheck(x) {
   });
 }
 
-function inventoryAmount(x, y) {
+// asks user for quantity to add to stock.
+function inventoryAmount(productName, stock) {
   inquirer
     .prompt({
-      name: 'amount',
+      name: 'quantity',
       type: 'input',
-      message: `How many ${x}s would you like to add to inventory?`
+      message: `Enter quantity of ${productName} you would like to add to inventory?`
     }).then(choice => {
-      let amount = numberCheck(choice.amount);
-      if (!amount) {
+      let quantity = numberCheck(choice.quantity);
+      if (!quantity) {
         console.log(`\nNot a valid amount.\n`);
-        return inventoryAmount(x);
+        return inventoryAmount(productName, stock);
       }
-      inventoryAdd(x, y, amount);
+      inventoryAdd(productName, stock, quantity);
     })
 }
 
-function inventoryAdd(x, y, z) {
-  let newInventory = y + z;
+// adds inventory to product.
+function inventoryAdd(productName, stock, quantity) {
+  let newInventory = stock + quantity;
   let query = 'UPDATE products SET stock_quantity = ? WHERE product_name = ?';
-  connection.query(query, [newInventory, x], function(err, res) {
+  connection.query(query, [newInventory, productName], function(err, res) {
     if (err) throw err;
-    console.log(`\nYou added ${z} ${x}s. The new ${x} inventory is ${newInventory}.\n`);
+    console.log(`\nNew ${productName} inventory: ${newInventory}\n`);
     continueQuestion();
   })
 }
 
+// asks user for new product and department name
 function addProduct() {
   let departments = [];
   let query = 'SELECT department_name FROM departments';
@@ -125,7 +137,7 @@ function addProduct() {
       {
         type: 'input',
         message: 'Enter product name.',
-        name: 'name'
+        name: 'productName'
       },
       {
         type: 'list',
@@ -134,54 +146,57 @@ function addProduct() {
         name: 'department'
       }
     ]).then(choice => {
-      addProductPrice(choice.name, choice.department);
+      addProductPrice(choice.productName, choice.department);
     });
 }
 
-function addProductPrice(x, y) {
+// asks user for new product price.
+function addProductPrice(productName, department) {
   inquirer
     .prompt({
       type: 'input',
-      message: `Enter the price for ${x}.`,
+      message: `Enter the price for ${productName}.`,
       name: 'price'
     }).then(choice => {
       var regex  = /^\d+(?:\.\d{0,2})$/;
       var numStr = choice.price;
       if (!regex.test(numStr)) {
         console.log(`Not a valid price.`);
-        return addProductPrice(x, y);
+        return addProductPrice(productName, department);
       }
       numStr = +numStr;
-      addProductStock(x, y, numStr);
+      addProductStock(productName, department, numStr);
     });
 }
 
-function addProductStock(name, dept, price) {
+// asks user for new product stock quantity.
+function addProductStock(productName, department, price) {
   inquirer
     .prompt({
       type: 'input',
-      message: `Enter the stock quantity for ${name}.`,
+      message: `Enter ${productName} stock quantity.`,
       name: 'stock'
     }).then(choice => {
-
-      let amount = numberCheck(choice.stock);
-      if (!amount) {
+      let stock = numberCheck(choice.stock);
+      if (!stock) {
         console.log(`\nNot a valid quantity.\n`);
-        return addProductStock(name, dept, price);
+        return addProductStock(productName, department, price);
       }
-      addProductDB(name, dept, price, amount);
+      addProductDB(productName, department, price, stock);
     })  
 }
 
-function addProductDB(name, dept, price, amount) {
+// adds new product to products table
+function addProductDB(productName, department, price, stock) {
   let query = 'INSERT INTO products (product_name, department_name, price, stock_quantity, product_sales) VALUES (?, ?, ?, ?, ?)';
-  connection.query(query, [name, dept, price, amount, 0], function(err, res) {
+  connection.query(query, [productName, department, price, stock, 0], function(err, res) {
     if (err) throw err;
-    console.log(`\n${name} added as new product in database.\n`);
+    console.log(`\nNew product added: ${productName}\n`);
     continueQuestion();
   })
 }
 
+// asks user to continue or exit.
 function continueQuestion() {
   inquirer
     .prompt({
@@ -201,6 +216,8 @@ function continueQuestion() {
     })
 }
 
+// returns false if passed parameter is non-integer.
+// returns passed parameter back if it's an integer.
 function numberCheck(x) {
   let amount = Number(x)
   if ((!Number.isInteger(amount)) || amount < 1) {

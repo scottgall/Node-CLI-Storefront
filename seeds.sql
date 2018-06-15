@@ -1,5 +1,6 @@
 USE bamazon;
 
+-- INITIAL DEPARTMENT ROWS
 INSERT INTO departments (department_name, over_head_costs, product_sales)
 VALUES ('produce', 2000, 0);
 
@@ -24,7 +25,7 @@ VALUES ('alcohol', 1500, 0);
 INSERT INTO departments (department_name, over_head_costs, product_sales)
 VALUES ('grocery', 999, 0);
 
--- ==================================================
+-- INITIAL PRODUCT ROWS
 INSERT INTO products (product_name, department_name, price, stock_quantity, product_sales)
 VALUES ('avocado', 'produce', 1.88, 182, 0);
 
