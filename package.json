@@ -1,0 +1,16 @@
+{
+  "name": "newbamazon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "columnify": "^1.5.4",
+    "inquirer": "^6.0.0",
+    "mysql": "^2.15.0"
+  }
+}
