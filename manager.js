@@ -213,7 +213,7 @@ function continueQuestion() {
           connection.end();
           break;
       }
-    })
+    });
 }
 
 // returns false if passed parameter is non-integer.
