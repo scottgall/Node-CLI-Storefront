@@ -1,5 +1,5 @@
-# Bamazon App
-* This is a storefront app which allows users to interact with product & department data stored within a relational database.
+# Bamazon
+* Bamazon is a storefront app which allows users to interact with product & department data stored within a relational database.
 
 ## Execution
 * Run `npm install` from your CLI within the main directory to enable dependencies.
