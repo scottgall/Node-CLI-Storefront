@@ -6,15 +6,15 @@
 
 ## Functionality
 * Various levels of functionality within the storefront are accessed by running one of the following commands:
-`customer.js`
+`customer.js`\n
 - View products for sale.
-- Purchase products.
-`manager.js`
+- Purchase products.\n
+`manager.js`\n
 - View products for sale.
 - View products with low inventory.
 - Add to a product's inventory.
-- Add a new product.
-`supervisor.js`
+- Add a new product.\n
+`supervisor.js`\n
 - View product sales by department.
 - Add a new department.
 
