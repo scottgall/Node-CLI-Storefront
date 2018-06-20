@@ -85,7 +85,7 @@ function newDepartmentOverhead(departmentName) {
       var regex  = /^\d+(?:\.\d{0,2})$/;
       var numStr = choice.price;
       if (!regex.test(numStr)) {
-        console.log(`\nNot a valid price(ex. 100.00).\n`);
+        console.log(`\nNot a valid price (ex. 100.00).\n`);
         return newDepartmentOverhead(departmentName);
       }
       numStr = +numStr;

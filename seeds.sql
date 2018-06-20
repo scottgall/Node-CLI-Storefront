@@ -2,7 +2,7 @@ USE bamazon;
 
 -- INITIAL DEPARTMENT ROWS
 INSERT INTO departments (department_name, over_head_costs)
-VALUES ('produce', 2000;
+VALUES ('produce', 2000);
 
 INSERT INTO departments (department_name, over_head_costs)
 VALUES ('meat', 100);
