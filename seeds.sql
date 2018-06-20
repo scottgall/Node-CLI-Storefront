@@ -1,29 +1,29 @@
 USE bamazon;
 
 -- INITIAL DEPARTMENT ROWS
-INSERT INTO departments (department_name, over_head_costs, product_sales)
-VALUES ('produce', 2000, 0);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('produce', 2000;
 
-INSERT INTO departments (department_name, over_head_costs, product_sales)
-VALUES ('meat', 1000, 0);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('meat', 100);
 
-INSERT INTO departments (department_name, over_head_costs, product_sales)
-VALUES ('frozen', 1200, 0);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('frozen', 1200);
 
-INSERT INTO departments (department_name, over_head_costs, product_sales)
-VALUES ('dairy', 700, 0);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('dairy', 700);
 
-INSERT INTO departments (department_name, over_head_costs, product_sales)
-VALUES ('pharmacy', 600, 0);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('pharmacy', 600);
 
-INSERT INTO departments (department_name, over_head_costs, product_sales)
-VALUES ('bakery', 5000, 0);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('bakery', 5000);
 
-INSERT INTO departments (department_name, over_head_costs, product_sales)
-VALUES ('alcohol', 1500, 0);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('alcohol', 1500);
 
-INSERT INTO departments (department_name, over_head_costs, product_sales)
-VALUES ('grocery', 999, 0);
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ('grocery', 999);
 
 -- INITIAL PRODUCT ROWS
 INSERT INTO products (product_name, department_name, price, stock_quantity, product_sales)
