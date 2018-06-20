@@ -31,6 +31,5 @@
   - Inquirer
   - Columnify
 
-## Video walkthrough
-(https://drive.google.com/file/d/1B0xz2dvB9NujA8tBsmn04aMGiBVNZr3i/view)
+[video walkthrough](https://drive.google.com/file/d/1B0xz2dvB9NujA8tBsmn04aMGiBVNZr3i/view)
   
